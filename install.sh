@@ -13,7 +13,7 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # For installing dns-crypt, you require to activate the community repo.
 echo "[1/7] Installing packages..."
-apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump
+apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump wget
 
 # This is crucial for routing to work. 
 # It forwards packets from wlan0 to eth0.
@@ -31,7 +31,7 @@ cp "$REPO_DIR/etc/nftables.nft"               /etc/nftables.nft
 cp "$REPO_DIR/etc/logrotate.d/dnscrypt-proxy" /etc/logrotate.d/dnscrypt-proxy
 
 echo "[4/7] Installing blocklist..."
-curl -o /etc/dnscrypt-proxy/blocked-names.txt \
+wget -O /etc/dnscrypt-proxy/blocked-names.txt \
   https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/pro.txt
 
 # Check wlan0 state.
