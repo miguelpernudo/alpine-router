@@ -6,12 +6,19 @@ I decided to give it a second life as a small networking lab so I could start de
 
 ```mermaid
 graph LR
-    A[Internet] --> B[Router\n192.168.0.1]
-    B --> C[eth0\n192.168.0.30]
-    C --> D[Pathfinder]
-    D --> E[wlan0\n192.168.2.1]
-    E --> F[dnscrypt-proxy\nnftables NAT]
-    F --> G[Wi-Fi Clients\n192.168.2.x]
+    A[Internet] <--> B[Router\n192.168.0.1]
+    B <--> C[eth0\n192.168.0.30]
+    
+    subgraph Pathfinder
+        C <--> FW[nftables]
+        FW <--> DNS[dnscrypt-proxy]
+        DNS <--> DM[dnsmasq]
+        DM <--> AP[hostapd]
+    end
+
+    AP <--> E[wlan0\n192.168.2.1]
+    E <--> F[Wi-Fi Clients\n192.168.2.x]
+
 ```
 
 ## Instalation.
@@ -24,11 +31,13 @@ or
 curl -L https://github.com/miguelpernudo/pathfinder/archive/refs/heads/main.tar.gz
 ```
 
+
 2. Unzip.
 ```
 tar -xzf main.tar.gz
 cd pathfinder-main
 ```
+
 
 3. Secrets.
 ```
@@ -36,11 +45,13 @@ cp secrets.env.example secrets.env
 vi secrets.env
 ```
 
+
 4. Execute.
 ```
 doas sh install.sh
 ```
-or with sudo if you use it.
+or sudo.
+
 
 ## Structure
 ```
