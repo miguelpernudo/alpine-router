@@ -75,4 +75,10 @@ rc-service hostapd start
 rc-update add crond default
 rc-service crond start
 
+for service in hostapd dnsmasq dnscrypt-proxy nftables; do
+    if ! grep -q "rc_crash_action" /etc/conf.d/$service; then
+        echo 'rc_crash_action="restart"' >> /etc/conf.d/$service
+    fi
+done
+
 echo "All done. Do: iw dev wlan0 info"
