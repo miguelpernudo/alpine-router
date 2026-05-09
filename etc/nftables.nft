@@ -23,6 +23,9 @@ table inet filter {
         # DNS y DHCP (wlan0)
         iif wlan0 udp dport { 53, 67 } accept;
         iif wlan0 tcp dport 53 accept;
+
+        # Netdata (LAN only).
+        iif wlan0 tcp dport 19999 accept;
     }
 
     chain forward {

@@ -13,7 +13,7 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # For installing dns-crypt, you require to activate the community repo.
 echo "[1/7] Installing packages..."
-apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump wget
+apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump wget netdata
 
 # This is crucial for routing to work. 
 # It forwards packets from wlan0 to eth0.
@@ -70,6 +70,8 @@ rc-service nftables start
 rc-service dnscrypt-proxy start
 rc-service dnsmasq start
 rc-service hostapd start
+rc-update add netdata default
+rc-service netdata start
 
 # Logrotate.
 rc-update add crond default
