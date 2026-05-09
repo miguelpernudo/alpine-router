@@ -10,14 +10,14 @@ graph LR
     B <--> C[eth0\n192.168.0.30]
     
     subgraph Pathfinder
-        C <--> FW[nftables\nNAT]
-        FW <--> DNS[dnscrypt-proxy\nblocklist]
-        DNS <--> DM[dnsmasq]
-        DM <--> AP[hostapd]
+        C <--> D[nftables\nNAT]
+        D <--> E[dnscrypt-proxy\nblocklist]
+        E <--> F[dnsmasq]
+        F <--> G[hostapd]
     end
 
-    AP <--> E[wlan0\n192.168.2.1]
-    E <--> F[Wi-Fi Clients\n192.168.2.x]
+    G <--> H[wlan0\n192.168.2.1]
+    H <--> I[Wi-Fi Clients\n192.168.2.x]
 
 ```
 
@@ -71,12 +71,14 @@ or sudo.
 ```
 
 ## hostapd
-The primarily responsible for turning the network card into a network in its own that can be accessed. Set the ESSID, password (that's why we need the secrets.env), channel, etc.
+The primarily responsible for turning the network card into a network in its own that can be accessed. Set the SSID, password (that's why we need the secrets.env), channel, etc.
 ## dnsmasq
 It's the DHCP server that assigns IP addresses to the devices connected in the network and resolves DNS using dsnCrypt in this case.
 
 ## dnsCrypt 
 Encrypts the plaintext in DNS queries. Provides an extra layer of security and privacy. 
-
 ## nftables
 A robust firewall with strict policies that allows only necessary traffic. SSH access is permitted only if the user is on the same LAN.
+
+## netdata
+For monitoring, http://192.168.1.2:19999 (LAN only).
