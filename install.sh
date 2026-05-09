@@ -22,6 +22,7 @@ echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-forwarding.conf
 sysctl -p /etc/sysctl.d/99-forwarding.conf
 
 . "$REPO_DIR/secrets.env"
+export WPA_PASSPHRASE
 envsubst < "$REPO_DIR/etc/hostapd.conf" > /etc/hostapd/hostapd.conf
 
 echo "[3/7] Copying paths..."
