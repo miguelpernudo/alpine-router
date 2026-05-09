@@ -29,6 +29,9 @@ cp "$REPO_DIR/etc/dnscrypt-proxy.toml"        /etc/dnscrypt-proxy/dnscrypt-proxy
 cp "$REPO_DIR/etc/nftables.nft"               /etc/nftables.nft
 cp "$REPO_DIR/etc/logrotate.d/dnscrypt-proxy" /etc/logrotate.d/dnscrypt-proxy
 
+curl -o /etc/dnscrypt-proxy/blocked-names.txt \
+  https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/pro.txt
+
 # Check wlan0 state.
 echo "[4/6] Checking wlan0..."
 if ip link show wlan0 | grep -q "DOWN"; then
@@ -48,7 +51,7 @@ iface wlan0 inet static
 EOF
 rc-update add networking boot
 
-# the services will start automatically.
+# The services will start automatically.
 echo "[5/6] Enabling services..."
 for svc in hostapd dnsmasq dnscrypt-proxy nftables; do
     rc-update add "$svc" default

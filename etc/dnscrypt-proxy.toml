@@ -4,6 +4,10 @@ listen_addresses = ['127.0.0.1:5353']
 
 server_names = ['cloudflare', 'quad9-dnscrypt-ip4-nofilter-pri']
 
+# Ad blocking.
+# The list is installed in the install.sh.
+blocked_names_file = '/etc/dnscrypt-proxy/blocked-names.txt'
+
 [sources]
   [sources.public-resolvers]
   
