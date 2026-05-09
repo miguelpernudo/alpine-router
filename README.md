@@ -14,6 +14,34 @@ graph LR
     F --> G[Wi-Fi Clients\n192.168.2.x]
 ```
 
+## Instalation.
+ 1. Download the repo.
+```
+wget https://github.com/miguelpernudo/pathfinder/archive/refs/heads/main.tar.gz
+```
+or
+```
+curl -L https://github.com/miguelpernudo/pathfinder/archive/refs/heads/main.tar.gz
+```
+
+2. Unzip.
+```
+tar -xzf main.tar.gz
+cd pathfinder-main
+```
+
+3. Secrets.
+```
+cp secrets.env.example secrets.env
+vi secrets.env
+```
+
+4. Execute.
+```
+doas sh install.sh
+```
+or with sudo if you use it.
+
 ## Structure
 ```
 .
@@ -32,12 +60,11 @@ graph LR
 
 ## hostapd
 The primarily responsible for turning the network card into a network in its own that can be accessed. Set the ESSID, password (that's why we need the secrets.env), channel, etc.
-
 ## dnsmasq
 It's the DHCP server that assigns IP addresses to the devices connected in the network and resolves DNS using dsnCrypt in this case.
 
 ## dnsCrypt 
-Encrypts the plaintext in DNS queries. Provides an extra layer of security and privacy.
+Encrypts the plaintext in DNS queries. Provides an extra layer of security and privacy. 
 
 ## nftables
 A robust firewall with strict policies that allows only necessary traffic. SSH access is permitted only if the user is on the same LAN.
