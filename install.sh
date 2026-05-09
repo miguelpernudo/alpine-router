@@ -11,29 +11,30 @@ trap 'echo "[ERROR] in $LINENO. Aborting."' ERR
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-echo "[1/6] Installing packages..."
+echo "[1/7] Installing packages..."
 apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump
 
 # This is crucial for routing to work. 
 # It forwards packets from wlan0 to eth0.
-echo "[2/6] Configuring IP forwarding..."
+echo "[2/7] Configuring IP forwarding..."
 echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-forwarding.conf
 sysctl -p /etc/sysctl.d/99-forwarding.conf
 
 . "$REPO_DIR/secrets.env"
 envsubst < "$REPO_DIR/etc/hostapd.conf.template" > /etc/hostapd/hostapd.conf
 
-echo "[3/6] Copying paths..."
+echo "[3/7] Copying paths..."
 cp "$REPO_DIR/etc/dnsmasq.conf"               /etc/dnsmasq.conf
 cp "$REPO_DIR/etc/dnscrypt-proxy.toml"        /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 cp "$REPO_DIR/etc/nftables.nft"               /etc/nftables.nft
 cp "$REPO_DIR/etc/logrotate.d/dnscrypt-proxy" /etc/logrotate.d/dnscrypt-proxy
 
+echo "[4/7] Installing blocklist..."
 curl -o /etc/dnscrypt-proxy/blocked-names.txt \
   https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/pro.txt
 
 # Check wlan0 state.
-echo "[4/6] Checking wlan0..."
+echo "[5/7] Checking wlan0..."
 if ip link show wlan0 | grep -q "DOWN"; then
     echo "wlan0 down, setting up..."
     ip link set wlan0 up
@@ -42,22 +43,27 @@ else
 fi
 
 # Static IP.
-cat >> /etc/network/interfaces << EOF
+if ! grep -q "auto wlan0" /etc/network/interfaces; then
+    cat >> /etc/network/interfaces << EOF
 
 auto wlan0
 iface wlan0 inet static
     address 192.168.2.1
     netmask 255.255.255.0
 EOF
+fi
 rc-update add networking boot
 
+# Services will fail if the host didn't have an IP.
+ip addr add 192.168.2.1/24 dev wlan0 2>/dev/null || true 
+
 # The services will start automatically.
-echo "[5/6] Enabling services..."
+echo "[6/7] Enabling services..."
 for svc in hostapd dnsmasq dnscrypt-proxy nftables; do
     rc-update add "$svc" default
 done
 
-echo "[6/6] Launching services..."
+echo "[7/7] Launching services..."
 rc-service nftables start
 rc-service dnscrypt-proxy start
 rc-service dnsmasq start
