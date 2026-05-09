@@ -44,6 +44,7 @@ cd pathfinder-main
 cp secrets.env.example secrets.env
 vi secrets.env
 ```
+or your text editor.
 
 
 4. Execute.
