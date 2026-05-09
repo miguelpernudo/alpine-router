@@ -11,6 +11,7 @@ trap 'echo "[ERROR] in $LINENO. Aborting."' ERR
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# For installing dns-crypt, you require to activate the community repo.
 echo "[1/7] Installing packages..."
 apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump
 
@@ -21,7 +22,7 @@ echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/99-forwarding.conf
 sysctl -p /etc/sysctl.d/99-forwarding.conf
 
 . "$REPO_DIR/secrets.env"
-envsubst < "$REPO_DIR/etc/hostapd.conf.template" > /etc/hostapd/hostapd.conf
+envsubst < "$REPO_DIR/etc/hostapd.conf" > /etc/hostapd/hostapd.conf
 
 echo "[3/7] Copying paths..."
 cp "$REPO_DIR/etc/dnsmasq.conf"               /etc/dnsmasq.conf
