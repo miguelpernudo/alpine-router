@@ -10,8 +10,8 @@ graph LR
     B <--> C[eth0\n192.168.0.30]
     
     subgraph Pathfinder
-        C <--> FW[nftables]
-        FW <--> DNS[dnscrypt-proxy]
+        C <--> FW[nftables\nNAT]
+        FW <--> DNS[dnscrypt-proxy\nblocklist]
         DNS <--> DM[dnsmasq]
         DM <--> AP[hostapd]
     end
