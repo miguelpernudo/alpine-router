@@ -53,6 +53,9 @@ doas sh install.sh
 ```
 or sudo.
 
+> This script will enable the Alpine community repo automatically,
+> as dnscrypt-proxy is not available in the main repo.
+
 
 ## Structure
 ```
@@ -72,11 +75,28 @@ or sudo.
 
 ## hostapd
 The primarily responsible for turning the network card into a network in its own that can be accessed. Set the SSID, password (that's why we need the secrets.env), channel, etc.
+
 ## dnsmasq
 It's the DHCP server that assigns IP addresses to the devices connected in the network and resolves DNS using dsnCrypt in this case.
 
 ## dnsCrypt 
 Encrypts the plaintext in DNS queries. Provides an extra layer of security and privacy. 
+I would recommend to have a cronjob that automatically installs the blocklist in case it gets updated:
+
+```
+doas vi /etc/periodic/weekly/update-blocklist
+```
+or any name you want.
+```
+#!/bin/sh
+wget -O /etc/dnscrypt-proxy/blocked-names.txt \
+  https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/pro.txt
+rc-service dnscrypt-proxy restart
+```
+```
+doas chmod +x /etc/periodic/weekly/update-blocklist
+```
+
 ## nftables
 A robust firewall with strict policies that allows only necessary traffic. SSH access is permitted only if the user is on the same LAN.
 
