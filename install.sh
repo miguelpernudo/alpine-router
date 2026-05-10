@@ -13,6 +13,11 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # For installing dns-crypt, you require to activate the community repo.
 echo "[1/7] Installing packages..."
+
+# This enables the community repo, required for dnscrypt-proxy.
+sed -i 's|#http://dl-cdn.alpinelinux.org/alpine/\(v[0-9.]*\)/community|http://dl-cdn.alpinelinux.org/alpine/\1/community|' /etc/apk/repositories
+apk update
+
 apk add --no-cache hostapd dnsmasq dnscrypt-proxy nftables iw logrotate gettext tcpdump wget netdata
 
 # This is crucial for routing to work. 
