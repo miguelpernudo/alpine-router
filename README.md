@@ -1,8 +1,8 @@
-# PATHFINDER
-This script turns my Asus mini PC into a basic, secure gateway.
+This script turns my Asus mini PC into a basic, secure gateway which I call *Pathfinder*.
 
-This PC is an Asus Eee PC X101CH, with intel Atom N2600and 980MB RAM.
-I decided to give it a second life as a small networking lab so I could start defining and experimenting with the approach I’d like a real router to take. Since the hardware isn’t in perfect condition, it only functions as an access point and not as a router.
+This mini PC is an Asus Eee PC X101CH, with intel Atom N2600and 980MB RAM.
+I decided to give it a second life as a small networking lab so I could start defining and experimenting with the approach I’d like a real router to take. I dediced to use Alpine looking for an alternative to OpenWrt.
+Since the hardware isn’t in perfect condition, it only functions as an access point and not as a router.
 
 ```mermaid
 graph LR
