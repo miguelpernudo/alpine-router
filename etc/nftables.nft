@@ -1,5 +1,7 @@
 flush ruleset
 
+define LAN = 192.168.0.0/16
+
 table inet filter {
     chain input {
         type filter hook input priority filter; policy drop;
@@ -17,21 +19,20 @@ table inet filter {
         ip6 nexthdr icmpv6 limit rate 10/second burst 20 packets accept;
 
         # SSH (only LAN)
-        tcp dport 22 meta nfproto ipv4 ip saddr { 192.168.0.0/16 } \
-          ct state new meter ssh_brute { ip saddr timeout 2m limit rate 3/minute burst 5 packets } accept;
+        tcp dport 22 meta nfproto ipv4 ip saddr { $LAN } ct state new meter ssh_brute { ip saddr timeout 2m limit rate 3/minute burst 5 packets } accept;
 
-        # DNS y DHCP (wlan0)
+        # DNS and  DHCP (wlan0)
         iif wlan0 udp dport { 53, 67 } accept;
         iif wlan0 tcp dport 53 accept;
 
-        # Netdata (LAN only).
-        iif wlan0 tcp dport 19999 accept;
+        # Netdata (LAN only)
+        ip saddr $LAN tcp dport 19999 accept;
     }
 
     chain forward {
         type filter hook forward priority filter; policy drop;
-        ct state invalid drop;  
         ct state established,related accept;
+        ct state invalid drop;  
         iif wlan0 oif eth0 accept;
     }
 
